@@ -15,11 +15,11 @@ import java.awt.*;
 
 public class Main extends javax.swing.JFrame {
 
-    int drawx, drawy, drawi, drawj, diffx, diffy, x, y;
-    java.awt.Image[] image = new java.awt.Image[5];
+    int drawi, drawj, x, y;
+    java.awt.Image[] image = new java.awt.Image[6];
     BasicBlock[][] scene = new BasicBlock[20][50];
 
-    public static void main(String args[]) {
+    public static void main (String args[]) {
         new Main();
     }
 
@@ -28,13 +28,18 @@ public class Main extends javax.swing.JFrame {
     public Main () {
         int i, j;
         this.setTitle("Prototype_E");
-        this.setSize(500, 330);
+        this.setSize(500, 400);
         this.setVisible(true);
         this.setResizable(false);
         this.addKeyListener(new KeyListener());
 
-        for (i = 0; i < 5; ++ i) {
-            String fname = "sources/" + Integer.toString (i + 1) + ".jpg";
+        for (i = 0; i < 6; ++ i) {
+            String fname;
+            if (i != 5) {
+                fname = "sources/" + Integer.toString (i + 1) + ".jpg";
+            } else {
+                fname = "sources/clearHeader.jpg";
+            }
             try {
                 image[i] = ImageIO.read(new File (fname));
             } catch (Exception ex) {
@@ -56,20 +61,26 @@ public class Main extends javax.swing.JFrame {
         int lbx, lby, ubx, uby, begx, begy;
         lbx = x - 250 - (x - 250) % 100;
         lby = y - 150 - (y - 150) % 100;
-        ubx = (x + 300) / 100;
-        ubx *= 100;
-        uby = (y + 200) / 100;
-        uby *= 100;
+
+        ubx = x + 250;
+        if (ubx % 100 == 0) { ubx -= 100; }
+        else { ubx -= (x + 250) % 100; }
+        uby = y + 150;
+
+        if (uby % 100 == 0) { uby -= 100; }
+        else { uby -= (y + 150) % 100; }
+
         begx = lbx - (x - 250);
         begy = lby - (y - 150);
         int i, j, k, l;
-        for (i = lbx, k=begx; i < ubx; i += 100, k += 100) {
-            for (j = lby, l=begy; j < uby; j += 100, l += 100) {
+        for (i = lbx, k=begx; i <= ubx; i += 100, k += 100) {
+            for (j = lby, l=begy; j <= uby; j += 100, l += 100) {
                 drawi = i / 100;
                 drawj = j / 100;
-                grap.drawImage(image[scene[drawj][drawi].getType()], k, l + 30, null);
+                grap.drawImage(image[scene[drawj][drawi].getType()], k, l + 100, null);
             }
         }
+        grap.drawImage(image[5], 0, 0, null);
     }
 
     class KeyListener extends KeyAdapter {
